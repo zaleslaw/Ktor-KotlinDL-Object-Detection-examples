@@ -1,0 +1,9 @@
+/gradlew
+/gradlew.bat
+/gradle/
+/.gradle/
+/.idea/
+/build/
+/cache/
+/clientFiles/
+/serverFiles/
