@@ -1,4 +1,4 @@
-package imagerecognition
+package demo.imagerecognition
 
 import getFileFromResource
 import org.jetbrains.kotlinx.dl.api.inference.keras.loaders.TFModelHub

@@ -1,4 +1,4 @@
-package ktor
+package outdated
 
 import getFileFromResource
 import io.ktor.application.*

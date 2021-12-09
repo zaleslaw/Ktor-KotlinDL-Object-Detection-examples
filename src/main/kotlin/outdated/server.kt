@@ -1,4 +1,4 @@
-package ktor.`client-server`
+package outdated
 
 import getFileFromResource
 import io.ktor.application.*
@@ -119,11 +119,11 @@ fun main(args: Array<String>) {
                // TODO
             }
 
-            post("/signup") {
+           /* post("/signup") {
                 val formParameters = call.receiveParameters()
                 val username = formParameters["username"].toString()
                 call.respondText("The '$username' account is created")
-            }
+            }*/
 
             get("/") {
                 call.respondHtml {

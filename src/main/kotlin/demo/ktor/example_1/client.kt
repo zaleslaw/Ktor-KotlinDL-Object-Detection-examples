@@ -1,6 +1,8 @@
+package demo.ktor.example_1
+
+import getFileFromResource
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
-import io.ktor.client.features.*
 import io.ktor.client.request.forms.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
@@ -11,19 +13,14 @@ fun main() {
         val client = HttpClient(CIO)
 
         val response: HttpResponse = client.submitFormWithBinaryData(
-            url = "http://localhost:8000/upload",
+            url = "http://localhost:8000/recognize",
             formData = formData {
-                append("description", "Ktor logo")
-                append("image", getFileFromResource("detection/image1.jpg").readBytes(), Headers.build {
+                append("image", getFileFromResource("recognition/image8.jpg").readBytes(), Headers.build {
                     append(HttpHeaders.ContentType, "image/jpg")
-                    append(HttpHeaders.ContentDisposition, "filename=image1.jpg")
+                    append(HttpHeaders.ContentDisposition, "filename=image8.jpg")
                 })
             }
-        ) {
-            onUpload { bytesSentTotal, contentLength ->
-                println("Sent $bytesSentTotal bytes from $contentLength")
-            }
-        }
+        )
 
         println(response.readText())
     }
