@@ -170,6 +170,9 @@ private fun drawAndSaveDetectedObjects(
             "person" -> newGraphics.color = Color.RED
             "bicycle" -> newGraphics.color = Color.BLUE
             "car" -> newGraphics.color = Color.GREEN
+            "traffic light" -> newGraphics.color = Color.ORANGE
+            "train" -> newGraphics.color = Color.PINK
+
             else -> newGraphics.color = Color.MAGENTA
         }
         newGraphics.stroke = stroke1

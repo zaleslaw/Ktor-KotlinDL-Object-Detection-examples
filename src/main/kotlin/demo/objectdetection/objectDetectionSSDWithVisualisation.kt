@@ -17,6 +17,7 @@ import java.awt.*
 import java.io.File
 import javax.swing.JFrame
 import javax.swing.JPanel
+import kotlin.math.abs
 
 fun main() {
     val modelHub =
@@ -28,7 +29,7 @@ fun main() {
 
         val imageFile = getFileFromResource("detection/image2.jpg")
         val detectedObjects =
-            detectionModel.detectObjects(imageFile = imageFile, topK = 20)
+            detectionModel.detectObjects(imageFile = imageFile, topK = 1000)
 
         detectedObjects.forEach {
             println("Found ${it.classLabel} with probability ${it.probability}")
@@ -94,6 +95,7 @@ class JPanel(
             val left = it.xMin * imageShape.width!!
             val bottom = it.yMax * imageShape.height!!
             val right = it.xMax * imageShape.width!!
+            if (abs(top - bottom) > 300 || abs(right - left) > 300) return@forEach
             // left, bot, right, top
 
             // y = columnIndex

@@ -18,9 +18,9 @@ fun main() {
     model.use { detectionModel ->
         println(detectionModel)
 
-        val imageFile = getFileFromResource("detection/image1.jpg")
+        val imageFile = getFileFromResource("detection/image2.jpg")
         val detectedObjects =
-            detectionModel.detectObjects(imageFile = imageFile, topK = 20)
+            detectionModel.detectObjects(imageFile = imageFile, topK = 100)
 
         detectedObjects.forEach {
             println("Found ${it.classLabel} with probability ${it.probability}")
