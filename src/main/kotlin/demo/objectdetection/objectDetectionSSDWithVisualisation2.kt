@@ -41,7 +41,7 @@ private fun visualise(
 ) {
     val frame = JFrame("Detected Objects")
     @Suppress("UNCHECKED_CAST")
-    frame.contentPane.add(ObjectDetectionPanel(imageFile, detectedObjects))
+    frame.contentPane.add(ObjectDetectionPanel2(imageFile, detectedObjects))
     frame.pack()
     frame.setLocationRelativeTo(null)
     frame.isVisible = true
@@ -49,7 +49,7 @@ private fun visualise(
     frame.isResizable = false
 }
 
-private class ObjectDetectionPanel(
+private class ObjectDetectionPanel2(
     val image: File,
     private val detectedObjects: List<DetectedObject>
 ) : JPanel() {
@@ -72,7 +72,15 @@ private class ObjectDetectionPanel(
 
             graphics as Graphics2D
             val stroke1: Stroke = BasicStroke(6f)
-            graphics.setColor(Color.RED)
+
+            when(it.classLabel) {
+                "person" -> graphics.setColor(Color.WHITE)
+                "car" -> graphics.setColor(Color.GREEN)
+                "traffic light" -> graphics.setColor(Color.YELLOW)
+                "bicycle" -> graphics.setColor(Color.MAGENTA)
+                else -> graphics.setColor(Color.RED)
+            }
+
             graphics.stroke = stroke1
             graphics.drawRect(left.toInt(), bottom.toInt(), (right - left).toInt(), (top - bottom).toInt())
         }
