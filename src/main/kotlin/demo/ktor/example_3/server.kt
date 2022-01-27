@@ -13,10 +13,6 @@ import kotlinx.html.*
 import org.jetbrains.kotlinx.dl.api.inference.loaders.ONNXModelHub
 import org.jetbrains.kotlinx.dl.api.inference.objectdetection.DetectedObject
 import org.jetbrains.kotlinx.dl.api.inference.onnx.ONNXModels
-import org.jetbrains.kotlinx.dl.dataset.image.ColorOrder
-import org.jetbrains.kotlinx.dl.dataset.preprocessor.*
-import org.jetbrains.kotlinx.dl.dataset.preprocessor.image.resize
-import toBufferedImage
 import java.awt.BasicStroke
 import java.awt.Color
 import java.awt.Graphics2D
@@ -109,60 +105,23 @@ fun main(args: Array<String>) {
     model.close()
 }
 
-
 private fun drawRectanglesForDetectedObjects(
     fileName: String,
-    imageFile: File,
+    image: File,
     detectedObjects: List<DetectedObject>
 ) {
-    val preprocessing: Preprocessing = preprocess {
-        load {
-            pathToData = imageFile
-            imageShape = ImageShape(224, 224, 3)
-            colorMode = ColorOrder.BGR
-        }
-        transformImage {
-            resize {
-                outputWidth = 1200
-                outputHeight = 1200
-            }
-        }
-        transformTensor {
-            rescale {
-                scalingCoefficient = 255f
-            }
-        }
-    }
-
-    val rawImage = preprocessing().first
-
-    drawAndSaveDetectedObjects(fileName, rawImage, ImageShape(1200, 1200, 3), detectedObjects)
-}
-
-private fun drawAndSaveDetectedObjects(
-    fileName: String,
-    image: FloatArray,
-    imageShape: ImageShape,
-    detectedObjects: List<DetectedObject>
-) {
-    val bufferedImage = image.toBufferedImage(imageShape)
+    val bufferedImage = ImageIO.read(image)
 
     val newGraphics = bufferedImage.createGraphics()
     newGraphics.drawImage(bufferedImage, 0, 0, null)
 
     detectedObjects.forEach {
 
-        val top = it.yMin * imageShape.height!!
-        val left = it.xMin * imageShape.width!!
-        val bottom = it.yMax * imageShape.height!!
-        val right = it.xMax * imageShape.width!!
+        val top = it.yMin * bufferedImage.height
+        val left = it.xMin * bufferedImage.width
+        val bottom = it.yMax * bufferedImage.height
+        val right = it.xMax * bufferedImage.width
         if (abs(top - bottom) > 400 || abs(right - left) > 400) return@forEach
-        // left, bot, right, top
-
-        // y = columnIndex
-        // x = rowIndex
-        val yRect = bottom
-        val xRect = left
 
         newGraphics as Graphics2D
         val stroke1: Stroke = BasicStroke(4f)
@@ -176,7 +135,7 @@ private fun drawAndSaveDetectedObjects(
             else -> newGraphics.color = Color.MAGENTA
         }
         newGraphics.stroke = stroke1
-        newGraphics.drawRect(xRect.toInt(), yRect.toInt(), (right - left).toInt(), (top - bottom).toInt())
+        newGraphics.drawRect(left.toInt(), bottom.toInt(), (right - left).toInt(), (top - bottom).toInt())
     }
 
     ImageIO.write(bufferedImage, "jpg", File("serverFiles/$fileName"))
