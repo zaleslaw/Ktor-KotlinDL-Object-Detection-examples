@@ -31,7 +31,6 @@ fun main(args: Array<String>) {
         routing {
             post("/detect") {
                 val multipartData = call.receiveMultipart()
-                // TODO: extract from part topK and classlabel (if empty detect all)
                 var newFileName = ""
                 multipartData.forEachPart { part ->
                     when (part) {
@@ -48,7 +47,7 @@ fun main(args: Array<String>) {
                             val filteredObjects =
                                 detectedObjects.filter { it.classLabel == "car" || it.classLabel == "person" || it.classLabel == "bicycle" }
 
-                            visualise(newFileName, imageFile, filteredObjects) // todo: rename
+                            visualise(newFileName, imageFile, filteredObjects)
 
                             val file = File("serverFiles/$newFileName")
                             call.response.header(
@@ -60,8 +59,6 @@ fun main(args: Array<String>) {
                         }
                     }
                 }
-
-               // TODO
             }
         }
     }.start(wait = true)
