@@ -30,6 +30,8 @@ import org.jetbrains.kotlinx.dl.api.inference.objectdetection.DetectedObject
 fun App(viewModel: ObjectDetectionViewModel = ObjectDetectionViewModel()) {
     val imageName = "detection/image2.png"
 
+    val bitmap = loadImageBitmap(getFileFromResource(imageName).inputStream())
+
     val viewState by viewModel.uiState.collectAsState(
         ObjectDetectionUiState.Beginning(),
         viewModel.viewModelScope.coroutineContext
@@ -48,11 +50,14 @@ fun App(viewModel: ObjectDetectionViewModel = ObjectDetectionViewModel()) {
                     Image(
                         painterResource(imageName),
                         contentDescription = null,
-                        contentScale = ContentScale.Fit,
-                        modifier = Modifier.size(1200.dp)
+                        contentScale = ContentScale.None,
+                        modifier = Modifier.size(bitmap.width.dp, bitmap.height.dp)
                     )
                     if (viewState.detectionState == DetectionUiStateType.DONE) {
-                        SmileyFaceCanvas(viewState.detectedObjects, Size(1200.0f, 400.0f))
+                        DetectedObjectCanvas(
+                            viewState.detectedObjects,
+                            Size(bitmap.width.toFloat(), bitmap.height.toFloat())
+                        )
                     }
                 }
                 val text = when (viewState.detectionState) {
@@ -64,13 +69,12 @@ fun App(viewModel: ObjectDetectionViewModel = ObjectDetectionViewModel()) {
                 Text(text)
 
             }
-//                    items(viewState.detectedObjects.size) { detectedObject ->
         }
     }
 }
 
 @Composable
-fun SmileyFaceCanvas(
+fun DetectedObjectCanvas(
     objects: List<DetectedObject>,
     bufferedImage: Size,
     modifier: Modifier = Modifier
@@ -93,11 +97,11 @@ fun SmileyFaceCanvas(
                 val bottom = obj.yMax * bufferedImage.height
                 val right = obj.xMax * bufferedImage.width
 
-                if ((color != Color.White) && (obj.probability > 0.3)) {
-                    drawLine(color, Offset(left, top), Offset(right, top))
-                    drawLine(color, Offset(right, top), Offset(right, bottom))
-                    drawLine(color, Offset(right, bottom), Offset(left, bottom))
-                    drawLine(color, Offset(left, bottom), Offset(left, top))
+                if (color != Color.White) {
+                    drawLine(Color.Blue, Offset(left, top), Offset(right, top))
+                    drawLine(Color.Green, Offset(right, top), Offset(right, bottom))
+                    drawLine(Color.Yellow, Offset(right, bottom), Offset(left, bottom))
+                    drawLine(Color.Red, Offset(left, bottom), Offset(left, top))
                 }
             }
         }

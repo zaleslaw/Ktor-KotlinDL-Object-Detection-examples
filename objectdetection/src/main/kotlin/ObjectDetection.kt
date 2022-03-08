@@ -17,9 +17,8 @@ class ObjectDetection(private val cacheDirectory: String = "cache/pretrainedMode
         model.use { detectionModel ->
             println(detectionModel)
 
-            //val imageFile = getFileFromResource("detection/image2.png")
             val detectedObjects =
-                detectionModel.detectObjects(imageFile = imageFile, topK = 1000)
+                detectionModel.detectObjects(imageFile = imageFile, topK = 5)
 
             detectedObjects.forEach {
                 println("Found ${it.classLabel} with probability ${it.probability}")
@@ -28,28 +27,4 @@ class ObjectDetection(private val cacheDirectory: String = "cache/pretrainedMode
         }
     }
 
-    private fun detectObjects(imageFile: File, topK: Int = 5): List<DetectedObject> {
-        val preprocessing: Preprocessing = preprocess {
-            load {
-                pathToData = imageFile
-                imageShape = ImageShape(224, 224, 3)
-                colorMode = ColorOrder.BGR
-            }
-            transformImage {
-                resize {
-                    outputHeight = 1200
-                    outputWidth = 1200
-                }
-            }
-        }
-
-        val (data, shape) = preprocessing()
-
-        val preprocessedData = ONNXModels.ObjectDetection.SSD.preprocessInput(
-            data,
-            longArrayOf(shape.width!!, shape.height!!, shape.channels) // TODO: refactor to the imageShape
-        )
-
-        return SSDObjectDetectionModel().detectObjects(preprocessedData, topK)
-    }
 }
