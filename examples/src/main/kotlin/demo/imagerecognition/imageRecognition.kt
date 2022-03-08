@@ -9,7 +9,7 @@ fun main() {
     val modelHub =
         TFModelHub(cacheDirectory = File("cache/pretrainedModels"))
 
-    val model = modelHub[TFModels.CV.ResNet50] // TODO: explain about models tradeoff (accuracy/latency)
+    val model = modelHub[TFModels.CV.ResNet50]
 
     model.use {
         for (i in 1..8) {

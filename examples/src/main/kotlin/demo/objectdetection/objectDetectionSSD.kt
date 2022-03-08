@@ -11,16 +11,14 @@ import org.jetbrains.kotlinx.dl.api.inference.onnx.ONNXModels
 import java.io.File
 
 fun main() {
-    val modelHub =
-        ONNXModelHub(cacheDirectory = File("cache/pretrainedModels"))
-    val model = ONNXModels.ObjectDetection.SSD.pretrainedModel(modelHub)
+    val modelHub = ONNXModelHub(cacheDirectory = File("cache/pretrainedModels"))
+    val model = modelHub.loadPretrainedModel(ONNXModels.ObjectDetection.SSD)
 
     model.use { detectionModel ->
         println(detectionModel)
 
         val imageFile = getFileFromResource("detection/image2.jpg")
-        val detectedObjects =
-            detectionModel.detectObjects(imageFile = imageFile, topK = 100)
+        val detectedObjects = detectionModel.detectObjects(imageFile = imageFile, topK = 20)
 
         detectedObjects.forEach {
             println("Found ${it.classLabel} with probability ${it.probability}")
