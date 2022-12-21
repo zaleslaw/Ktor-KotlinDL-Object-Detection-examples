@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import org.jetbrains.kotlinx.dl.api.inference.objectdetection.DetectedObject
 import java.io.File
+import java.io.InputStream
 
 sealed interface ObjectDetectionUiState {
 
@@ -68,7 +69,7 @@ class ObjectDetectionViewModel {
             viewModelState.value.toUiState()
         )
 
-    suspend fun detect(file: File) {
+    suspend fun detect(file: InputStream) {
         val detector = ObjectDetection()
         viewModelState.value = ObjectDetectionState(emptyList(), DetectionUiStateType.DETECTING)
         viewModelScope.launch {
